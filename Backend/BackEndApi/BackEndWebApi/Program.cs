@@ -9,6 +9,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
 
+//add for react 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("https://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 
 var app = builder.Build();
 
@@ -18,6 +30,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();  //For react
 
 app.UseHttpsRedirection();
 
