@@ -1,26 +1,21 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getCountryByName } from '../services/api';
+import { useLocation, useParams } from 'react-router-dom';
 
-const CountryDetail = () => {
-  const { name } = useParams();
-  const [country, setCountry] = useState(null);
+function CountryDetail() {
+  const { state } = useLocation();
 
-  useEffect(() => {
-    getCountryByName(name).then(res => setCountry(res.data)).catch(console.error);
-  }, [name]);
+  if (!state) {
+    return <div>No data provided.</div>;
+  }
 
-  if (!country) return <p>Loading...</p>;
+  const { name, capital, population } = state;
 
   return (
-    <div className="p-4">
-      <img src={country.flagUrl} alt={`Flag of ${country.name}`} className="w-64 mb-4" />
-      <h1 className="text-3xl font-bold">{country.name}</h1>
-      <p><strong>Capital:</strong> {country.capital}</p>
-      <p><strong>Population:</strong> {country.population.toLocaleString()}</p>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">{name}</h1>
+      <p><strong>Capital:</strong> {capital}</p>
+      <p><strong>Population:</strong> {population.toLocaleString()}</p>
     </div>
   );
-};
+}
 
 export default CountryDetail;

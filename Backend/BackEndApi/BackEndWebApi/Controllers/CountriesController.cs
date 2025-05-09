@@ -34,6 +34,7 @@ public class CountriesController : ControllerBase
 
         var countries = rawCountries.Select(c =>
         {
+            var Id = Guid.NewGuid().ToString();
             var name = c.GetProperty("name").GetProperty("common").GetString();
             var capital = c.TryGetProperty("capital", out var cap) && cap.ValueKind == JsonValueKind.Array && cap.GetArrayLength() > 0
                 ? cap[0].GetString()
@@ -43,6 +44,7 @@ public class CountriesController : ControllerBase
 
             return new CountryDto
             {
+                Id = Id,
                 Name = name,
                 Capital = capital,
                 Population = population,
@@ -52,4 +54,6 @@ public class CountriesController : ControllerBase
 
         return Ok(countries);
     }
+
+
 }

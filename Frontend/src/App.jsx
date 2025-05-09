@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import CountryDetail from './pages/CountryDetail';
 
@@ -8,7 +8,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/country/:name" element={<CountryDetail />} />
+        <Route path="/country/:id" element={<CountryDetail />} /> {/* Dynamic route for country detail */}
       </Routes>
     </Router>
   );

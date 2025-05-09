@@ -1,9 +1,11 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { getCountries } from '../services/api';
 
 function Home() {
   const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,9 +23,24 @@ function Home() {
   return (
     <div className="p-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       {countries.map((country) => (
-        <div key={country.name.common} className="border rounded p-2 text-center">
-          <img src={country.flags?.png} alt={country.name.common} className="w-full h-24 object-cover mb-2" />
-          <div>{country.name.common}</div>
+        
+        <div key={country.id} className="border rounded p-2 text-center">
+          <Link
+  to={`/country/${country.id}`}
+  state={{
+    name: country.name,
+    capital: country.capital,
+    population: country.population,
+  }}
+>
+            <div>{country.name}</div>
+            <img
+              src={country.flagUrl}
+              alt={country.name}
+              className="w-full h-24 object-cover mb-2"
+            />
+          </Link>
+          
         </div>
       ))}
     </div>
@@ -31,4 +48,5 @@ function Home() {
 }
 
 export default Home;
+
 
