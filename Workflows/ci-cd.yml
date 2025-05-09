@@ -2,46 +2,52 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  frontend:
+    name: Frontend - Install & Test
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: Frontend
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.x'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Install dependencies (Backend)
-      run: dotnet restore ./backend/FlagExplorer.sln
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build Backend
-      run: dotnet build ./backend/FlagExplorer.sln --no-restore
+      - name: Run tests
+        run: npx vitest --globals
 
-    - name: Test Backend
-      run: dotnet test ./backend/FlagExplorer.sln --no-build
+  backend:
+    name: Backend - Restore, Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend/BackEndApi
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x' # Adjust to your .NET version
 
-    - name: Install dependencies (Frontend)
-      run: |
-        cd frontend
-        npm install
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build Frontend
-      run: |
-        cd frontend
-        npm run build
+      - name: Build
+        run: dotnet build --no-restore
 
-    - name: Test Frontend
-      run: |
-        cd frontend
-        npm test -- --watchAll=false
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
