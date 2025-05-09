@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.x'
+
+    - name: Install dependencies (Backend)
+      run: dotnet restore ./backend/FlagExplorer.sln
+
+    - name: Build Backend
+      run: dotnet build ./backend/FlagExplorer.sln --no-restore
+
+    - name: Test Backend
+      run: dotnet test ./backend/FlagExplorer.sln --no-build
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies (Frontend)
+      run: |
+        cd frontend
+        npm install
+
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: Test Frontend
+      run: |
+        cd frontend
+        npm test -- --watchAll=false
