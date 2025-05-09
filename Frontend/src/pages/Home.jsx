@@ -20,6 +20,7 @@ function Home() {
     fetchData();
   }, []);
 
+
   return (
     <div className="p-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       {countries.map((country) => (
@@ -45,6 +46,7 @@ function Home() {
       ))}
     </div>
   );
+
 }
 
 export default Home;
