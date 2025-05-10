@@ -50,7 +50,9 @@ public class CountriesController : ControllerBase
                 Population = population,
                 FlagUrl = flagUrl
             };
-        }).ToList();
+        })
+            .OrderBy(c => c.Name) // <-- Alphabetical sort by name
+            .ToList();
 
         return Ok(countries);
     }
